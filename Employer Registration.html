@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal - Employer Registration</title>
+    <style>
+        :root {
+            /* Using Amber/Orange to distinguish Employer from the Blue User side */
+            --primary: #f59e0b; 
+            --primary-hover: #d97706;
+            --bg-light: #f0f4f8; /* Matches the light background from your image */
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #cbd5e1;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background-color: var(--bg-light); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            color: var(--text-dark);
+        }
+
+        .container { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 12px; 
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05); 
+            width: 100%;
+            max-width: 380px; 
+            text-align: center;
+            box-sizing: border-box;
+        }
+
+        .brand-logo {
+            font-weight: 900;
+            font-size: 20px;
+            color: var(--primary);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h2 { 
+            margin-top: 0;
+            margin-bottom: 30px; 
+            font-size: 1.4rem;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid var(--border-color); 
+            border-radius: 6px; 
+            box-sizing: border-box; 
+            transition: border-color 0.2s;
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        input::placeholder {
+            color: #94a3b8;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 15px; 
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+        button:hover { 
+            background-color: var(--primary-hover); 
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="brand-logo">Job Portal</div>
+    <h2>Create company account</h2>
+    
+    <form onsubmit="return handleEmployerRegister(event)">
+        <div class="form-group">
+            <label>Company Name</label>
+            <input type="text" id="companyName" placeholder="e.g. Nexus Tech" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Work Email</label>
+            <input type="email" id="email" placeholder="hr@company.com" required>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit">Get Started</button>
+    </form>
+
+    <p class="footer-text">
+        Already have an account? <a href="#">Log in</a>
+    </p>
+</div>
+
+<script>
+    function handleEmployerRegister(event) {
+        event.preventDefault();
+        // Redirecting to the dark dashboard page from earlier
+        window.location.href = "dashboard.html"; 
+    }
+</script>
+
+</body>
+</html>
