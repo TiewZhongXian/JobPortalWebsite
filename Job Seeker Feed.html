@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Job Seeker Feed</title>
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;margin:0;background:#f6f8fa;color:#0b1726}
+    header{background:#0b59d6;color:white;padding:14px 20px}
+    .container{max-width:980px;margin:20px auto;padding:0 16px}
+    .controls{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+    input[type="search"]{flex:1;padding:10px;border:1px solid #dfe6ee;border-radius:6px}
+    .jobs{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+    .job{background:white;border:1px solid #e6eef6;border-radius:8px;padding:14px;box-shadow:0 1px 0 rgba(11,23,38,.03)}
+    .job h3{margin:0 0 6px;font-size:18px}
+    .meta{font-size:13px;color:#556677;margin-bottom:8px}
+    .summary{font-size:14px;color:#1b2430}
+    .posted{float:right;font-size:12px;color:#8baaaa}
+    .empty{padding:40px;text-align:center;color:#5b6b7a}
+    .top-actions{display:flex;gap:8px;align-items:center}
+    .btn{background:#fff;border:1px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:8px;color:#fff}
+    .link-btn{background:#fff;color:#0b59d6;border:1px solid #cfe0ff;padding:8px 12px;border-radius:8px}
+  </style>
+  </head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:12px">
+        <button onclick="history.back()" style="background:transparent;border:none;color:white;cursor:pointer;font-size:18px">←</button>
+        <h1 style="margin:0;font-size:20px">Recently Posted Jobs</h1>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span id="welcome" style="font-size:14px;opacity:.95"></span>
+        <a id="profileLink" href="Profile Setup.html" style="color:white;text-decoration:underline;display:none">Profile</a>
+        <a id="createLink" href="Create Job Posting Page.html" style="color:white;text-decoration:underline;display:none">Post Job</a>
+        <button id="logoutBtn" style="background:transparent;border:1px solid rgba(255,255,255,.2);color:white;padding:6px 10px;border-radius:8px;display:none">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="controls">
+      <input id="q" type="search" placeholder="Search jobs by title, company or location" />
+      <select id="limit">
+        <option value="10">10</option>
+        <option value="20" selected>20</option>
+        <option value="50">50</option>
+      </select>
+      <button id="refresh">Refresh</button>
+    </div>
+
+    <section id="jobs" class="jobs" aria-live="polite"></section>
+    <div id="empty" class="empty" hidden>No jobs found.</div>
+  </main>
+
+  <script>
+    const jobsEl = document.getElementById('jobs');
+    const emptyEl = document.getElementById('empty');
+    const qEl = document.getElementById('q');
+    const limitEl = document.getElementById('limit');
+    const refreshBtn = document.getElementById('refresh');
+    const welcome = document.getElementById('welcome');
+    const profileLink = document.getElementById('profileLink');
+    const createLink = document.getElementById('createLink');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    function getJobs(){return JSON.parse(localStorage.getItem('jobs')||'[]')}
+    function getCurrent(){return JSON.parse(localStorage.getItem('currentUser')||'null')}
+    function logout(){localStorage.removeItem('currentUser'); location.href='User Login.html'}
+
+    const current = getCurrent();
+    if(current){
+      welcome.textContent = 'Hi, ' + (current.name||current.company||current.email);
+      logoutBtn.style.display = 'inline-block';
+      if(current.role === 'seeker') profileLink.style.display = 'inline-block';
+      if(current.role === 'employer') createLink.style.display = 'inline-block';
+    } else {
+      welcome.innerHTML = '<a href="User Login.html" style="color:white;text-decoration:underline">Log in</a>';
+    }
+    logoutBtn.addEventListener('click', logout);
+
+    function formatDate(d){ try{const dt=new Date(d);return dt.toLocaleDateString()}catch(e){return d} }
+    function escapeHtml(s){ if(!s) return ''; return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]); }
+    function createJobCard(job){ const el=document.createElement('article'); el.className='job'; el.innerHTML=`<div><h3>${escapeHtml(job.title)}</h3><div class="meta">${escapeHtml(job.company)} • ${escapeHtml(job.location||'') } <span class="posted">${formatDate(job.postedAt)}</span></div><div class="summary">${escapeHtml(job.description||job.summary||'')}</div></div>`; return el }
+
+    function loadJobs(){
+      const limit = parseInt(limitEl.value,10)||20;
+      const q = (qEl.value||'').trim().toLowerCase();
+      const all = getJobs().slice().sort((a,b)=> new Date(b.postedAt) - new Date(a.postedAt));
+      const filtered = all.filter(j=> !q || (`${j.title} ${j.company} ${j.location} ${j.description}`).toLowerCase().includes(q)).slice(0,limit);
+      jobsEl.innerHTML='';
+      if(!filtered.length){ emptyEl.hidden=false; return }
+      emptyEl.hidden = true; filtered.forEach(j=> jobsEl.appendChild(createJobCard(j)));
+    }
+
+    refreshBtn.addEventListener('click', loadJobs);
+    qEl.addEventListener('input', ()=>loadJobs());
+    limitEl.addEventListener('change', loadJobs);
+
+    loadJobs();
+  </script>
+</body>
+</html>
