@@ -1,148 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Portal | Join the Network</title>
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --text-dark: #1e293b;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-gradient); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            color: var(--text-dark);
-        }
-
-        .container { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
-            width: 100%;
-            max-width: 400px; 
-            text-align: center;
-        }
-
-        .brand-logo {
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: -1px;
-            color: var(--primary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        h2 { 
-            margin-bottom: 25px; 
-            font-size: 1.5rem;
-            color: #334155;
-        }
-
-        .form-group {
-            text-align: left;
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #64748b;
-        }
-
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #e2e8f0; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s;
-            font-size: 16px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            background-color: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: 600;
-            margin-top: 10px;
-            transition: background 0.3s;
-        }
-
-        button:hover { 
-            background-color: var(--primary-hover); 
-        }
-
-        .footer-text {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #94a3b8;
-        }
-
-        .footer-text a {
-            color: var(--primary);
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Join - Job Portal</title>
+  <style>
+    :root{--primary:#2563eb;--bg:#eef3fb}
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);margin:0;display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{background:#fff;padding:28px;border-radius:12px;box-shadow:0 8px 24px rgba(2,6,23,.06);width:100%;max-width:420px}
+    .brand{color:var(--primary);font-weight:800;margin-bottom:8px}
+    h2{margin:0 0 18px}
+    .form-group{margin-bottom:12px;text-align:left}
+    label{display:block;font-size:13px;color:#5b6b7a;margin-bottom:6px}
+    input{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6}
+    button{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:700}
+    .topbar{display:flex;align-items:center;margin-bottom:12px}
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="brand-logo">Job Portal</div>
+  <div class="card">
+    <div class="topbar"><button onclick="history.back()" style="background:none;border:none;color:#6b7280;cursor:pointer">← Back</button><div style="flex:1"></div></div>
+    <div class="brand">Job Portal</div>
     <h2>Create your account</h2>
-    
-    <form onsubmit="return handleRegister(event)">
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="name" placeholder="John Doe" required>
-        </div>
-        
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="name@company.com" required>
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••" required>
-        </div>
-
-        <button type="submit">Get Started</button>
+    <form id="registerForm">
+      <div class="form-group"><label>Full Name</label><input id="name" required></div>
+      <div class="form-group"><label>Email Address</label><input id="email" type="email" required></div>
+      <div class="form-group"><label>Password</label><input id="password" type="password" required></div>
+      <button type="submit">Get Started</button>
     </form>
+    <p style="margin-top:12px;color:#6b7280;font-size:13px">Already have an account? <a href="User Login.html">Log in</a></p>
+  </div>
 
-    <p class="footer-text">
-        Already have an account? <a href="#">Log in</a>
-    </p>
-</div>
+  <script>
+    function getUsers(){return JSON.parse(localStorage.getItem('users')||'[]')}
+    function saveUsers(u){localStorage.setItem('users', JSON.stringify(u))}
+    function setCurrent(u){localStorage.setItem('currentUser', JSON.stringify(u))}
 
-<script>
-    function handleRegister(event) {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        alert("Welcome to the Job Portal! Account created for " + email);
-    }
-</script>
-
+    document.getElementById('registerForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const users = getUsers();
+      if(users.find(x=>x.email===email)){ alert('Account exists. Please log in.'); location.href='User Login.html'; return }
+      const user = { id: Date.now(), name, email, password, role: 'seeker', profile: null };
+      users.push(user); saveUsers(users); setCurrent(user);
+      // go to feed (they can open profile from there)
+      location.href = 'Job Seeker Feed.html';
+    });
+  </script>
 </body>
 </html>

@@ -1,176 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employer - Post a Job</title>
-    <style>
-        :root {
-            /* Employer-side Amber Theme */
-            --primary: #f59e0b; 
-            --primary-hover: #d97706;
-            --bg-light: #f0f4f8; 
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border-color: #cbd5e1;
-        }
-
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background-color: var(--bg-light); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            min-height: 100vh; 
-            margin: 0; 
-            padding: 20px;
-            color: var(--text-dark);
-            box-sizing: border-box;
-        }
-
-        .container { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 8px 24px rgba(0,0,0,0.05); 
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-        }
-
-        .brand-logo {
-            font-weight: 900;
-            font-size: 20px;
-            color: var(--primary);
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            text-align: center;
-        }
-
-        h2 { 
-            margin-top: 0;
-            margin-bottom: 5px; 
-            font-size: 1.4rem;
-            color: var(--text-dark);
-            font-weight: 700;
-            text-align: center;
-        }
-
-        p.subtitle { 
-            text-align: center; 
-            color: var(--text-muted); 
-            font-size: 14px; 
-            margin-bottom: 30px; 
-        }
-
-        .form-group {
-            text-align: left;
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            font-size: 13px;
-            margin-bottom: 6px;
-            font-weight: 600;
-            color: var(--text-muted);
-        }
-
-        input, select, textarea { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid var(--border-color); 
-            border-radius: 6px; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-size: 15px;
-            color: var(--text-dark);
-            font-family: inherit;
-            background-color: white;
-        }
-
-        input::placeholder, textarea::placeholder {
-            color: #94a3b8;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15); /* Amber glow */
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
-        /* Minor tweak for the select arrow spacing */
-        select {
-            cursor: pointer;
-        }
-
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            background-color: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-size: 15px; 
-            font-weight: 600;
-            margin-top: 10px;
-            transition: background 0.2s;
-        }
-
-        button:hover { 
-            background-color: var(--primary-hover); 
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Job - Employer</title>
+  <style>
+    :root{--primary:#f59e0b;--bg:#f7fafc}
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;background:var(--bg);margin:0;display:flex;align-items:center;justify-content:center;min-height:100vh}
+    .card{background:#fff;padding:28px;border-radius:12px;box-shadow:0 8px 24px rgba(2,6,23,.06);width:100%;max-width:640px}
+    .brand{color:var(--primary);font-weight:900;margin-bottom:8px}
+    h2{margin:0 0 6px}
+    .form-group{margin-bottom:12px;text-align:left}
+    label{display:block;font-size:13px;color:#5b6b7a;margin-bottom:6px}
+    input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #e6eef6}
+    textarea{min-height:110px}
+    button{width:100%;padding:12px;background:var(--primary);color:#fff;border:none;border-radius:8px;font-weight:700}
+    .topbar{display:flex;align-items:center;margin-bottom:12px}
+  </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="brand-logo">Job Portal</div>
+  <div class="card">
+    <div class="topbar"><button onclick="history.back()" style="background:none;border:none;color:#6b7280;cursor:pointer">← Back</button><div style="flex:1"></div><a href="Job Seeker Feed.html" style="font-size:13px;color:#475569;text-decoration:none">View Feed</a></div>
+    <div class="brand">Job Portal</div>
     <h2>Post a New Job</h2>
-    <p class="subtitle">Find the perfect candidate for your team.</p>
-    
-    <form onsubmit="return handleJobPost(event)">
-        <div class="form-group">
-            <label>Job Title</label>
-            <input type="text" placeholder="e.g. Senior Software Engineer" required>
-        </div>
+    <p style="color:#6b7280;margin-top:0;margin-bottom:14px">Publish a job and it will appear in the job seeker feed.</p>
 
-        <div class="form-group">
-            <label>Job Type</label>
-            <select required>
-                <option value="" disabled selected>Select Type...</option>
-                <option value="full">Full-Time</option>
-                <option value="part">Part-Time</option>
-                <option value="contract">Contract</option>
-                <option value="freelance">Freelance</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label>Job Description</label>
-            <textarea placeholder="Describe the role, responsibilities, and requirements..." required></textarea>
-        </div>
-
-        <button type="submit">Publish Job</button>
+    <form id="jobForm">
+      <div class="form-group"><label>Job Title</label><input id="title" required></div>
+      <div class="form-group"><label>Job Type</label><select id="type" required><option value="full">Full-Time</option><option value="part">Part-Time</option><option value="contract">Contract</option><option value="freelance">Freelance</option></select></div>
+      <div class="form-group"><label>Location</label><input id="location" placeholder="e.g. Remote or City, State"></div>
+      <div class="form-group"><label>Job Description</label><textarea id="description" required></textarea></div>
+      <button type="submit">Publish Job</button>
     </form>
-</div>
+  </div>
 
-<script>
-    function handleJobPost(event) {
-        event.preventDefault();
-        alert("Success! Your job has been published. Redirecting to your active listings...");
-        
-        // In a real app, you would redirect to the employer dashboard/listings page here
-        window.location.href = "dashboard.html"; 
+  <script>
+    function getCurrent(){return JSON.parse(localStorage.getItem('currentUser')||'null')}
+    function getJobs(){return JSON.parse(localStorage.getItem('jobs')||'[]')}
+    function saveJobs(j){localStorage.setItem('jobs', JSON.stringify(j))}
+
+    const user = getCurrent();
+    if(!user || user.role!=='employer'){
+      // not logged in as employer -> redirect to login
+      // allow viewing feed if they want
+      // location.href = 'User Login.html';
     }
-</script>
 
+    document.getElementById('jobForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const title = document.getElementById('title').value.trim();
+      const type = document.getElementById('type').value;
+      const desc = document.getElementById('description').value.trim();
+      const location = document.getElementById('location').value.trim() || 'Remote';
+      const jobs = getJobs();
+      const job = { id: Date.now(), title, type, description: desc, location, company: (user&&user.company) || 'Employer', authorId: user?user.id:null, postedAt: new Date().toISOString() };
+      jobs.push(job); saveJobs(jobs);
+      alert('Job published. Returning to the job seeker feed.');
+      location.href = 'Job Seeker Feed.html';
+    });
+  </script>
 </body>
 </html>
