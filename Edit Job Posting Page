@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Job Posting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .salary-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .salary-group input {
+            flex: 1;
+        }
+
+        .buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .update-btn {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .cancel-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .update-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn:hover {
+            background-color: #545b62;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Edit Job Posting</h2>
+
+    <form action="/update-job" method="POST">
+
+        <!-- Hidden Job ID (to be filled dynamically) -->
+        <input type="hidden" name="job_id" value="123">
+
+        <label for="title">Job Title *</label>
+        <input type="text" id="title" name="title" required>
+
+        <label for="description">Job Description *</label>
+        <textarea id="description" name="description" required></textarea>
+
+        <label>Salary Range (RM) *</label>
+        <div class="salary-group">
+            <input type="number" name="salary_min" placeholder="Minimum" required min="0">
+            <input type="number" name="salary_max" placeholder="Maximum" required min="0">
+        </div>
+
+        <label for="location">Location *</label>
+        <input type="text" id="location" name="location" required>
+
+        <label for="job_type">Job Type *</label>
+        <select id="job_type" name="job_type" required>
+            <option value="">-- Select Job Type --</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+        </select>
+
+        <div class="buttons">
+            <button type="submit" class="update-btn">Update Job</button>
+            <button type="button" class="cancel-btn" onclick="window.history.back();">Cancel</button>
+        </div>
+
+    </form>
+</div>
+
+</body>
+</html>
