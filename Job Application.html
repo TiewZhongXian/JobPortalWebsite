@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 50%;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        .job-post {
+            padding: 15px;
+            background-color: #eef2ff;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Software Developer</h2>
+
+    <div class="job-post">
+        <p><strong>Company:</strong> Tech Solutions Sdn Bhd</p>
+        <p><strong>Location:</strong> Kuala Lumpur</p>
+        <p><strong>Description:</strong> We are looking for a passionate developer to join our team.</p>
+    </div>
+
+    <button onclick="showForm()">Apply</button>
+
+    <form id="applicationForm" style="display:none;" onsubmit="submitApplication(event)">
+        <h3>Submit Your Application</h3>
+
+        <label>Full Name:</label>
+        <input type="text" required>
+
+        <label>Email:</label>
+        <input type="email" required>
+
+        <label>Phone Number:</label>
+        <input type="text" required>
+
+        <label>Upload Resume (PDF only):</label>
+        <input type="file" accept=".pdf" required>
+
+        <button type="submit">Submit Application</button>
+    </form>
+
+    <div class="success-message" id="successMessage">
+        ✅ Your application has been submitted successfully!
+    </div>
+</div>
+
+<script>
+    function showForm() {
+        document.getElementById("applicationForm").style.display = "block";
+    }
+
+    function submitApplication(event) {
+        event.preventDefault();
+        document.getElementById("successMessage").style.display = "block";
+        document.getElementById("applicationForm").reset();
+    }
+</script>
+
+</body>
+</html>
