@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Recent Job Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #0052cc;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .job-card {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .job-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #172b4d;
+        }
+
+        .company {
+            color: #5e6c84;
+        }
+
+        .location {
+            color: #5e6c84;
+        }
+
+        .posted-date {
+            font-size: 12px;
+            color: #8993a4;
+            margin-top: 5px;
+        }
+
+        .view-btn {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: #36b37e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .view-btn:hover {
+            background-color: #2e9e6f;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Recently Posted Jobs</h1>
+</header>
+
+<div class="container">
+
+    <!-- Latest Job -->
+    <div class="job-card">
+        <div class="job-title">Software Engineer</div>
+        <div class="company">Tech Solutions Sdn Bhd</div>
+        <div class="location">Kuala Lumpur, Malaysia</div>
+        <div class="posted-date">Posted: 1 hour ago</div>
+        <button class="view-btn">View Details</button>
+    </div>
+
+    <div class="job-card">
+        <div class="job-title">Frontend Developer</div>
+        <div class="company">Innovatech</div>
+        <div class="location">Petaling Jaya, Malaysia</div>
+        <div class="posted-date">Posted: 5 hours ago</div>
+        <button class="view-btn">View Details</button>
+    </div>
+
+    <div class="job-card">
+        <div class="job-title">Data Analyst</div>
+        <div class="company">DataCorp</div>
+        <div class="location">Shah Alam, Malaysia</div>
+        <div class="posted-date">Posted: 1 day ago</div>
+        <button class="view-btn">View Details</button>
+    </div>
+
+</div>
+
+</body>
+</html>
