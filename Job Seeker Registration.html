@@ -3,146 +3,221 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Job Portal | Join the Network</title>
+    <title>Job Portal Website Group 1 - Login</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-gradient: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            --text-dark: #1e293b;
+            --primary-color: #0056b3;
+            --error-color: #dc3545;
+            --border-color: #ccc;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
         }
 
-        body { 
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: var(--bg-gradient); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            color: var(--text-dark);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
-        .container { 
-            background: white; 
-            padding: 40px; 
-            border-radius: 12px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); 
+        .login-card {
+            background-color: var(--card-bg);
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             width: 100%;
-            max-width: 400px; 
+            max-width: 400px;
+            box-sizing: border-box;
+        }
+
+        .login-card h2 {
             text-align: center;
-        }
-
-        .brand-logo {
-            font-weight: 800;
-            font-size: 24px;
-            letter-spacing: -1px;
-            color: var(--primary);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        h2 { 
-            margin-bottom: 25px; 
-            font-size: 1.5rem;
-            color: #334155;
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            text-align: left;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
-        label {
+        .form-group label {
             display: block;
-            font-size: 14px;
-            margin-bottom: 5px;
-            font-weight: 600;
-            color: #64748b;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
         }
 
-        input { 
-            width: 100%; 
-            padding: 12px; 
-            border: 2px solid #e2e8f0; 
-            border-radius: 8px; 
-            box-sizing: border-box; 
-            transition: border-color 0.2s;
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            box-sizing: border-box;
             font-size: 16px;
+            transition: border-color 0.3s;
         }
 
-        input:focus {
+        .form-group input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: var(--primary-color);
         }
 
-        button { 
-            width: 100%; 
-            padding: 14px; 
-            background-color: var(--primary); 
-            color: white; 
-            border: none; 
-            border-radius: 8px; 
-            cursor: pointer; 
-            font-size: 16px; 
-            font-weight: 600;
-            margin-top: 10px;
-            transition: background 0.3s;
+        .form-group input.error-highlight {
+            border-color: var(--error-color);
+            background-color: #fff8f8;
         }
 
-        button:hover { 
-            background-color: var(--primary-hover); 
-        }
-
-        .footer-text {
-            margin-top: 20px;
+        .error-message {
+            color: var(--error-color);
+            background-color: #ffe6e6;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
             font-size: 14px;
-            color: #94a3b8;
+            display: none;
+            text-align: center;
+            border: 1px solid #ffcccc;
         }
 
-        .footer-text a {
-            color: var(--primary);
-            text-decoration: none;
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .submit-btn:hover {
+            background-color: #004494;
+        }
+
+        .submit-btn:disabled {
+            background-color: #a0c4e8;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            color: #28a745;
+            text-align: center;
+            font-weight: bold;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="brand-logo">Job Portal</div>
-    <h2>Create your account</h2>
-    
-    <form onsubmit="return handleRegister(event)">
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" id="name" placeholder="John Doe" required>
-        </div>
+    <div class="login-card">
+        <h2>Job Portal Website Group 1</h2>
         
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="name@company.com" required>
-        </div>
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message">Redirecting to Dashboard...</div>
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="password" placeholder="••••••••" required>
-        </div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="text" id="email" placeholder="Enter your email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" placeholder="Enter your password">
+            </div>
 
-        <button type="submit">Get Started</button>
-    </form>
+            <button type="submit" id="loginBtn" class="submit-btn">Login</button>
+        </form>
+    </div>
 
-    <p class="footer-text">
-        Already have an account? <a href="#">Log in</a>
-    </p>
-</div>
+    <script>
+        // Simulated Database Credentials
+        const VALID_EMAIL = "user@email.com"; // Stored in lowercase for case-insensitive check
+        const VALID_PASSWORD = "Password123"; // Case-sensitive
 
-<script>
-    function handleRegister(event) {
-        event.preventDefault();
-        const email = document.getElementById('email').value;
-        alert("Welcome to the Job Portal! Account created for " + email);
-    }
-</script>
+        // State variables
+        let failedAttempts = 0;
+        const MAX_ATTEMPTS = 5;
 
+        // DOM Elements
+        const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const loginBtn = document.getElementById('loginBtn');
+
+        function showError(msg) {
+            errorMessage.textContent = msg;
+            errorMessage.style.display = 'block';
+        }
+
+        function clearErrors() {
+            errorMessage.style.display = 'none';
+            emailInput.classList.remove('error-highlight');
+            passwordInput.classList.remove('error-highlight');
+        }
+
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            // Check if account is locked out (SAT: 5 failed attempts)
+            if (failedAttempts >= MAX_ATTEMPTS) {
+                showError("Account temporarily locked due to too many failed attempts. Please try again later.");
+                return;
+            }
+
+            const emailVal = emailInput.value.trim();
+            const passwordVal = passwordInput.value;
+
+            let hasEmptyFields = false;
+
+            // Validation: Missing fields highlight (SAT: Prevent submission & highlight)
+            if (!emailVal) {
+                emailInput.classList.add('error-highlight');
+                hasEmptyFields = true;
+            }
+            if (!passwordVal) {
+                passwordInput.classList.add('error-highlight');
+                hasEmptyFields = true;
+            }
+
+            if (hasEmptyFields) {
+                showError("Please fill in all required fields.");
+                return;
+            }
+
+            // Authentication Logic (SAT: Case-insensitive email, Case-sensitive password)
+            const isEmailCorrect = emailVal.toLowerCase() === VALID_EMAIL;
+            const isPasswordCorrect = passwordVal === VALID_PASSWORD;
+
+            if (isEmailCorrect && isPasswordCorrect) {
+                // Success (SAT: Authenticate and redirect)
+                loginForm.style.display = 'none';
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'block';
+                failedAttempts = 0; // Reset attempts on success
+            } else {
+                // Failure (SAT: Generic error message)
+                failedAttempts++;
+                
+                if (failedAttempts >= MAX_ATTEMPTS) {
+                    showError("Account temporarily locked due to too many failed attempts. Please try again later.");
+                    emailInput.disabled = true;
+                    passwordInput.disabled = true;
+                    loginBtn.disabled = true;
+                } else {
+                    showError("Invalid email or password.");
+                }
+            }
+        });
+    </script>
 </body>
 </html>
