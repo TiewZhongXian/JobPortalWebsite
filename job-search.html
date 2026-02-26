@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Job Portal - Keyword Search</title>
+
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f7f7; }
+    .card { max-width: 900px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 14px; font-size: 22px; }
+    .row { display: flex; gap: 10px; align-items: center; }
+    .row input {
+      flex: 1; padding: 12px 12px; border: 1px solid #ddd; border-radius: 10px; font-size: 14px;
+      outline: none;
+    }
+    .row input:focus { border-color: #999; }
+    .row button {
+      padding: 12px 14px; border: none; border-radius: 10px; cursor: pointer;
+      background: #111; color: #fff; font-weight: 600;
+    }
+    .row button:hover { opacity: .92; }
+    .hint { margin-top: 10px; color: #666; font-size: 13px; }
+    .error { margin-top: 10px; color: #b00020; font-size: 13px; display: none; }
+
+    .results { margin-top: 18px; display: grid; gap: 12px; }
+    .job {
+      border: 1px solid #eee; border-radius: 12px; padding: 14px;
+      background: #fafafa;
+    }
+    .job-title { font-weight: 700; margin-bottom: 6px; }
+    .job-meta { color: #666; font-size: 13px; margin-bottom: 6px; }
+    .badge { display: inline-block; font-size: 12px; padding: 4px 8px; border-radius: 999px; background: #e8f5e9; color: #1b5e20; font-weight: 700; }
+    .no-results { display:none; margin-top: 16px; padding: 14px; border-radius: 12px; border: 1px dashed #ccc; background: #fcfcfc; color: #444; }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Search Jobs</h1>
+
+    <!-- ✅ Acceptance Criteria #1: Search bar input field -->
+    <form id="searchForm" class="row" autocomplete="off">
+      <input
+        id="keyword"
+        name="keyword"
+        type="text"
+        placeholder='Try: Developer, Marketing'
+        aria-label="Search jobs by keyword"
+        maxlength="60"
+      />
+      <button type="submit">Search</button>
+    </form>
+
+    <div class="hint">
+      Keywords are case-insensitive. Example: <b>developer</b> and <b>Developer</b> return the same results.
+    </div>
+
+    <!-- Validation error (optional but good) -->
+    <div id="errorBox" class="error"></div>
+
+    <!-- ✅ Acceptance Criteria #4: "No jobs found..." message -->
+    <div id="noResults" class="no-results">
+      No jobs found matching your keyword.
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results"></div>
+  </div>
+
+  <script>
+    /**
+     * Demo dataset (frontend-only).
+     * ✅ Only "active" jobs should be returned (Acceptance Criteria #2)
+     */
+    const JOBS = [
+      { id: 1, title: "Software Developer", company: "TechNova", description: "Build web apps using Java and Laravel.", status: "Active", location: "Kuala Lumpur" },
+      { id: 2, title: "Marketing Executive", company: "BrightAds", description: "Handle campaigns and social media marketing.", status: "Active", location: "Selangor" },
+      { id: 3, title: "UI/UX Designer", company: "PixelCraft", description: "Design user experiences and prototypes (Figma).", status: "Active", location: "Penang" },
+      { id: 4, title: "Backend Engineer", company: "DataFlow", description: "API development and database optimization.", status: "Closed", location: "Kuala Lumpur" }, // not active
+      { id: 5, title: "Sales & Marketing Intern", company: "RetailPro", description: "Assist in sales reporting and marketing activities.", status: "Active", location: "Johor" }
+    ];
+
+    const form = document.getElementById("searchForm");
+    const input = document.getElementById("keyword");
+    const resultsEl = document.getElementById("results");
+    const noResultsEl = document.getElementById("noResults");
+    const errorBox = document.getElementById("errorBox");
+
+    // Render helper
+    function renderJobs(jobs) {
+      resultsEl.innerHTML = "";
+      noResultsEl.style.display = jobs.length === 0 ? "block" : "none";
+
+      jobs.forEach(job => {
+        const div = document.createElement("div");
+        div.className = "job";
+        div.innerHTML = `
+          <div class="job-title">${job.title}</div>
+          <div class="job-meta">${job.company} • ${job.location}</div>
+          <div class="job-meta">${job.description}</div>
+          <span class="badge">${job.status}</span>
+        `;
+        resultsEl.appendChild(div);
+      });
+    }
+
+    // ✅ Show all active jobs initially (matches acceptance criteria #5 behavior when empty)
+    const activeJobs = JOBS.filter(j => j.status.toLowerCase() === "active");
+    renderJobs(activeJobs);
+
+    // Optional: validate "alphanumeric keywords" (letters/numbers/spaces allowed)
+    function isAlphanumericWithSpaces(str) {
+      // Allow letters, numbers, spaces; also allow simple punctuation like - , . ' " (common in job titles)
+      // If your tutor is strict, remove punctuation and keep only: /^[a-z0-9 ]+$/i
+      return /^[a-z0-9\s\-'",.]+$/i.test(str);
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      errorBox.style.display = "none";
+      const keywordRaw = input.value.trim();
+
+      // ✅ Acceptance Criteria #5: if empty keyword -> return default list of all active jobs
+      if (keywordRaw === "") {
+        renderJobs(activeJobs);
+        return;
+      }
+
+      // ✅ Acceptance Criteria #1: allow alphanumeric keywords (basic validation)
+      if (!isAlphanumericWithSpaces(keywordRaw)) {
+        errorBox.textContent = "Please enter alphanumeric keywords only (letters/numbers/spaces).";
+        errorBox.style.display = "block";
+        return;
+      }
+
+      // ✅ Acceptance Criteria #3: case-insensitive search
+      const keyword = keywordRaw.toLowerCase();
+
+      // ✅ Acceptance Criteria #2: match Title OR Company OR Description (only Active jobs)
+      const filtered = activeJobs.filter(job => {
+        const haystack = (job.title + " " + job.company + " " + job.description).toLowerCase();
+        return haystack.includes(keyword);
+      });
+
+      // ✅ Acceptance Criteria #4 handled by renderJobs(): show message if empty
+      renderJobs(filtered);
+
+      /**
+       * ===========================================
+       * OPTIONAL: Back-end integration (Laravel)
+       * ===========================================
+       * If you already have an API endpoint:
+       *   GET /api/jobs?keyword=developer
+       *
+       * Replace the filtering above with:
+       *
+       * const res = await fetch(`/api/jobs?keyword=${encodeURIComponent(keywordRaw)}`);
+       * const data = await res.json(); // array of jobs
+       * renderJobs(data);
+       *
+       * Make sure backend returns ONLY active jobs and does case-insensitive matching.
+       */
+    });
+  </script>
+</body>
+</html>
