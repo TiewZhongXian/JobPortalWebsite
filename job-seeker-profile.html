@@ -32,6 +32,36 @@
             <label for="contactEmail">Contact Email *</label>
             <input type="email" id="contactEmail" name="contactEmail" required placeholder="example@email.com">
         </fieldset>
+
+        <fieldset>
+            <legend>Work Experience</legend>
+            <p><em>Note: Add your most recent role below.</em></p>
+            <label for="jobTitle">Job Title</label>
+            <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g., Software Engineer">
+            <label for="companyName">Company Name</label>
+            <input type="text" id="companyName" name="companyName" placeholder="e.g., Acme Corp">
+            <div class="inline-field">
+                <label for="startDate">Start Date</label>
+                <input type="month" id="startDate" name="startDate">
+            </div>
+            <div class="inline-field">
+                <label for="endDate">End Date</label>
+                <input type="month" id="endDate" name="endDate">
+            </div>
+            <label style="font-weight: normal; margin-top: 5px;">
+                <input type="checkbox" name="isCurrentRole" value="yes"> I currently work here (Present)
+            </label>
+        </fieldset>
+
+        <fieldset>
+            <legend>Education</legend>
+            <label for="degree">Degree</label>
+            <input type="text" id="degree" name="degree" placeholder="e.g., Bachelor of Science in Computer Science">
+            <label for="institution">Institution Name</label>
+            <input type="text" id="institution" name="institution" placeholder="e.g., University of Technology">
+            <label for="gradYear">Year of Graduation</label>
+            <input type="number" id="gradYear" name="gradYear" min="1950" max="2030" placeholder="YYYY">
+        </fieldset>
     </form>
 </body>
 </html>
