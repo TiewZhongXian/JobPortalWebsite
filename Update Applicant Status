@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Applicant Pipeline Management</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+margin:40px;
+background:#f5f6fa;
+}
+
+h2{
+margin-bottom:20px;
+}
+
+/* Pipeline */
+
+.pipeline{
+display:flex;
+justify-content:space-between;
+margin-bottom:30px;
+}
+
+.stage{
+flex:1;
+margin:5px;
+padding:20px;
+background:white;
+border-radius:6px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+.stage strong{
+display:block;
+font-size:18px;
+margin-bottom:10px;
+}
+
+/* Filter */
+
+.filter{
+margin-bottom:20px;
+}
+
+/* Table */
+
+table{
+width:100%;
+border-collapse:collapse;
+background:white;
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#f0f0f0;
+}
+
+select{
+padding:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>Hiring Pipeline</h2>
+
+<div class="pipeline">
+
+<div class="stage" id="stageNew">
+<strong>New</strong>
+<div class="count">1 Applicant</div>
+</div>
+
+<div class="stage" id="stageReviewed">
+<strong>Reviewed</strong>
+<div class="count">1 Applicant</div>
+</div>
+
+<div class="stage" id="stageInterviewing">
+<strong>Interviewing</strong>
+<div class="count">0 Applicant</div>
+</div>
+
+<div class="stage" id="stageRejected">
+<strong>Rejected</strong>
+<div class="count">0 Applicant</div>
+</div>
+
+</div>
+
+<h2>Applicant List</h2>
+
+<div class="filter">
+Filter by Status:
+<select id="statusFilter" onchange="filterApplicants()">
+<option value="All">All</option>
+<option value="New">New</option>
+<option value="Reviewed">Reviewed</option>
+<option value="Interviewing">Interviewing</option>
+<option value="Rejected">Rejected</option>
+</select>
+</div>
+
+<table id="applicantTable">
+
+<thead>
+<tr>
+<th>Name</th>
+<th>Status</th>
+<th>Update Status</th>
+<th>Last Updated</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr data-status="New">
+<td>Alice Tan</td>
+
+<td class="status">New</td>
+
+<td>
+<select onchange="updateStatus(this)">
+<option value="New">New</option>
+<option value="Reviewed">Reviewed</option>
+<option value="Interviewing">Interviewing</option>
+<option value="Rejected">Rejected</option>
+</select>
+</td>
+
+<td class="timestamp">-</td>
+
+</tr>
+
+<tr data-status="Reviewed">
+
+<td>John Lee</td>
+
+<td class="status">Reviewed</td>
+
+<td>
+<select onchange="updateStatus(this)">
+<option value="New">New</option>
+<option value="Reviewed" selected>Reviewed</option>
+<option value="Interviewing">Interviewing</option>
+<option value="Rejected">Rejected</option>
+</select>
+</td>
+
+<td class="timestamp">-</td>
+
+</tr>
+
+</tbody>
+</table>
+
+<script>
+
+const employerHasPermission = true;
+
+function updateStatus(select){
+
+if(!employerHasPermission){
+alert("You do not have permission to update status.");
+return;
+}
+
+let row = select.parentElement.parentElement;
+
+let currentStatus = row.querySelector(".status").innerText;
+let newStatus = select.value;
+
+// status order pipeline
+const statusOrder = ["New","Reviewed","Interviewing","Rejected"];
+
+let currentIndex = statusOrder.indexOf(currentStatus);
+let newIndex = statusOrder.indexOf(newStatus);
+
+// prevent backward change
+if(newIndex < currentIndex){
+alert("Status cannot move backward once progressed.");
+select.value = currentStatus;
+return;
+}
+
+// prevent skipping stage (New → Interviewing)
+if(currentStatus === "New" && newStatus === "Interviewing"){
+alert("Applicant must be marked as Reviewed before Interviewing.");
+select.value = currentStatus;
+return;
+}
+
+// prevent changing after rejection
+if(currentStatus === "Rejected"){
+alert("Rejected applicants cannot change status.");
+select.value = currentStatus;
+return;
+}
+
+// update status
+row.querySelector(".status").innerText = newStatus;
+row.dataset.status = newStatus;
+
+// update timestamp
+let now = new Date();
+row.querySelector(".timestamp").innerText = now.toLocaleString();
+
+// update pipeline counts
+updatePipeline();
+
+}
+
+function filterApplicants(){
+
+let filter = document.getElementById("statusFilter").value;
+
+let rows = document.querySelectorAll("#applicantTable tbody tr");
+
+rows.forEach(row => {
+
+if(filter === "All"){
+row.style.display="";
+}else{
+row.style.display=row.dataset.status===filter ? "" : "none";
+}
+
+});
+
+}
+
+function updatePipeline(){
+
+let counts={
+New:0,
+Reviewed:0,
+Interviewing:0,
+Rejected:0
+};
+
+document.querySelectorAll("#applicantTable tbody tr").forEach(row=>{
+counts[row.dataset.status]++;
+});
+
+document.querySelector("#stageNew .count").innerText=counts.New+" Applicant";
+document.querySelector("#stageReviewed .count").innerText=counts.Reviewed+" Applicant";
+document.querySelector("#stageInterviewing .count").innerText=counts.Interviewing+" Applicant";
+document.querySelector("#stageRejected .count").innerText=counts.Rejected+" Applicant";
+
+}
+
+</script>
+
+</body>
+</html>
