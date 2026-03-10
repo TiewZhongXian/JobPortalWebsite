@@ -138,13 +138,34 @@
     const form = document.getElementById('profileForm');
     
     form.addEventListener('submit', function(e) {
-        // Prevent default submission
+        // Prevent default submission to handle custom validation and demo UI changes
         e.preventDefault();
+
+        // UAT 4: Ensure start date is earlier than or equal to end date
+        const startDateVal = document.getElementById('startDate').value;
+        const endDateVal = document.getElementById('endDate').value;
+        const dateErrorDiv = document.getElementById('dateError');
+        
+        if (startDateVal && endDateVal) {
+            const startDate = new Date(startDateVal);
+            const endDate = new Date(endDateVal);
+            
+            if (startDate > endDate) {
+                dateErrorDiv.style.display = 'block';
+                // Scroll to the error
+                document.getElementById('startDate').focus();
+                return; // Stop the submission
+            } else {
+                dateErrorDiv.style.display = 'none';
+            }
+        }
+
+        // If all validations pass (HTML5 handled the rest of UAT 8)
         
         // Hide the form container
         document.getElementById('formContainer').style.display = 'none';
 
-        // Display confirmation message
+        // UAT 9: Display confirmation message
         document.getElementById('successMessage').style.display = 'block';
     });
     </script>
