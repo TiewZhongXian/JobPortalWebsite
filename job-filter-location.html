@@ -1,1 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Job Portal - Filter by City or State</title>
 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      background: #f7f7f7;
+    }
+
+    .card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.06);
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      font-size: 22px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .row select {
+      flex: 1;
+      min-width: 220px;
+      padding: 12px 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      outline: none;
+      background: #fff;
+    }
+
+    .row select:focus {
+      border-color: #999;
+    }
+
+    .row button {
+      padding: 12px 14px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #111;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .row button:hover {
+      opacity: .92;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: #666;
+      font-size: 13px;
+    }
+
+    .results {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .job {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 14px;
+      background: #fafafa;
+    }
+
+    .job-title {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .job-meta {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #e8f5e9;
+      color: #1b5e20;
+      font-weight: 700;
+    }
+
+    .no-results {
+      display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px dashed #ccc;
+      background: #fcfcfc;
+      color: #444;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>Filter Jobs by City or State</h1>
+
+    <!-- Acceptance Criteria #1: provide filter option for city or state -->
+    <form id="filterForm" class="row" autocomplete="off">
+      <select id="locationFilter" name="locationFilter" aria-label="Filter jobs by city or state">
+        <option value="">-- Select City or State --</option>
+        <option value="Kuala Lumpur">Kuala Lumpur</option>
+        <option value="Selangor">Selangor</option>
+        <option value="Penang">Penang</option>
+        <option value="Johor">Johor</option>
+      </select>
+
+      <button type="submit">Filter</button>
+      <button type="button" id="resetBtn">Reset</button>
+    </form>
+
+    <div class="hint">
+      Select a city or state to view jobs in that location. Click Reset to show all active jobs again.
+    </div>
+
+    <!-- Acceptance Criteria #5: no matching jobs message -->
+    <div id="noResults" class="no-results">
+      No jobs found in this location.
+    </div>
+
+    <!-- Results -->
+    <div id="results" class="results"></div>
+  </div>
+
+  <script>
+    /**
+     * Demo dataset
+     */
+    const JOBS = [
+      { id: 1, title: "Software Developer", company: "TechNova", description: "Build web apps using Java and Laravel.", status: "Active", location: "Kuala Lumpur" },
+      { id: 2, title: "Marketing Executive", company: "BrightAds", description: "Handle campaigns and social media marketing.", status: "Active", location: "Selangor" },
+      { id: 3, title: "UI/UX Designer", company: "PixelCraft", description: "Design user experiences and prototypes (Figma).", status: "Active", location: "Penang" },
+      { id: 4, title: "Backend Engineer", company: "DataFlow", description: "API development and database optimization.", status: "Closed", location: "Kuala Lumpur" },
+      { id: 5, title: "Sales & Marketing Intern", company: "RetailPro", description: "Assist in sales reporting and marketing activities.", status: "Active", location: "Johor" },
+      { id: 6, title: "Frontend Developer", company: "WebWorks", description: "Develop responsive user interfaces.", status: "Active", location: "Selangor" }
+    ];
+
+    const form = document.getElementById("filterForm");
+    const locationFilter = document.getElementById("locationFilter");
+    const resetBtn = document.getElementById("resetBtn");
+    const resultsEl = document.getElementById("results");
+    const noResultsEl = document.getElementById("noResults");
+
+    // Only active jobs
+    const activeJobs = JOBS.filter(job => job.status.toLowerCase() === "active");
+
+    function renderJobs(jobs) {
+      resultsEl.innerHTML = "";
+      noResultsEl.style.display = jobs.length === 0 ? "block" : "none";
+
+      jobs.forEach(job => {
+        const div = document.createElement("div");
+        div.className = "job";
+        div.innerHTML = `
+          <div class="job-title">${job.title}</div>
+          <div class="job-meta">${job.company} • ${job.location}</div>
+          <div class="job-meta">${job.description}</div>
+          <span class="badge">${job.status}</span>
+        `;
+        resultsEl.appendChild(div);
+      });
+    }
+
+    // Show all active jobs by default
+    renderJobs(activeJobs);
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const selectedLocation = locationFilter.value.trim();
+
+      // Acceptance Criteria #2 and #3:
+      // display jobs matching selected city/state and update results after filter
+      if (selectedLocation === "") {
+        renderJobs(activeJobs);
+        return;
+      }
+
+      const filteredJobs = activeJobs.filter(job => job.location === selectedLocation);
+      renderJobs(filteredJobs);
+    });
+
+    // Acceptance Criteria #4: allow remove/reset filter
+    resetBtn.addEventListener("click", function() {
+      locationFilter.value = "";
+      renderJobs(activeJobs);
+    });
+  </script>
+</body>
+</html>
