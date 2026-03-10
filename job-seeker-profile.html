@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Seeker Professional Profile</title>
+    <style>
+        body { font-family: sans-serif; max-width: 800px; margin: 20px auto; line-height: 1.6; }
+        fieldset { margin-bottom: 20px; border: 1px solid #ccc; padding: 15px; border-radius: 5px; }
+        legend { font-weight: bold; padding: 0 5px; }
+        label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9em; }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="month"], input[type="file"], textarea, select { 
+            width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px;
+        }
+        input[type="submit"] { padding: 10px 20px; font-size: 16px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        input[type="submit"]:hover { background-color: #004494; }
+        .inline-field { display: inline-block; width: 48%; }
+        .error-message { color: #dc3545; font-size: 0.85em; display: none; margin-top: 5px; }
+        .hint { font-weight: normal; font-size: 0.8em; color: #666; }
+    </style>
+</head>
+<body>
+
+    <div id="formContainer">
+        <h1>Build Your Professional Profile</h1>
+        <p>Please fill out your details below so employers can evaluate your qualifications. Fields marked with * are required.</p>
+
+        <form id="profileForm" action="/submit-profile" method="POST" enctype="multipart/form-data">
+
+            <fieldset>
+                <legend>Basic Information</legend>
+                
+                <div class="inline-field">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Enter your first name">
+                </div>
+                
+                <div class="inline-field" style="float: right;">
+                    <label for="lastName">Last Name *</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Enter your last name">
+                </div>
+
+                <label for="contactEmail">Contact Email *</label>
+                <input type="email" id="contactEmail" name="contactEmail" required placeholder="example@email.com">
+
+                <label for="phoneNumber">Phone Number * <span class="hint">(10 to 11 digits)</span></label>
+                <input type="tel" id="phoneNumber" name="phoneNumber" required pattern="\d{10,11}" title="Phone number must contain only numbers and be 10 to 11 digits long." placeholder="e.g., 0123456789">
+            </fieldset>
+
+            <fieldset>
+                <legend>Work Experience</legend>
+                <p class="hint"><em>Note: Add your most recent role below.</em></p>
+                
+                <label for="jobTitle">Job Title *</label>
+                <input type="text" id="jobTitle" name="jobTitle" required placeholder="e.g., Software Engineer">
+
+                <label for="companyName">Company Name *</label>
+                <input type="text" id="companyName" name="companyName" required placeholder="e.g., Acme Corp">
+
+                <div class="inline-field">
+                    <label for="startDate">Start Date *</label>
+                    <input type="month" id="startDate" name="startDate" required>
+                </div>
+
+                <div class="inline-field" style="float: right;">
+                    <label for="endDate">End Date *</label>
+                    <input type="month" id="endDate" name="endDate" required>
+                </div>
+                <div id="dateError" class="error-message">Start date cannot be later than end date.</div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Education</legend>
+                <label for="institution">Institution Name *</label>
+                <input type="text" id="institution" name="institution" required placeholder="e.g., University of Technology">
+
+                <label for="programme">Programme or Qualification *</label>
+                <input type="text" id="programme" name="programme" required placeholder="e.g., Bachelor of Science in Computer Science">
+
+                <div class="inline-field">
+                    <label for="endYear">End Year *</label>
+                    <input type="number" id="endYear" name="endYear" required min="1950" max="2030" placeholder="YYYY">
+                </div>
+
+                <div class="inline-field" style="float: right;">
+                    <label for="result">Result (GPA/Grade) *</label>
+                    <input type="text" id="result" name="result" required placeholder="e.g., 3.8/4.0 or First Class">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Skills & Keywords</legend>
+                <label for="skills">Professional Skills * <span class="hint">(Please provide at least one key skill)</span></label>
+                <textarea id="skills" name="skills" rows="3" required placeholder="e.g., Project Management, Python, Agile Methodologies"></textarea>
+            </fieldset>
+
+            <fieldset>
+                <legend>Languages</legend>
+                <div class="inline-field">
+                    <label for="language">Language *</label>
+                    <input type="text" id="language" name="language" required placeholder="e.g., English, Mandarin, Malay">
+                </div>
+
+                <div class="inline-field" style="float: right;">
+                    <label for="proficiency">Proficiency Level (Optional)</label>
+                    <select id="proficiency" name="proficiency">
+                        <option value="">-- Select Level --</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advanced">Advanced</option>
+                        <option value="Native">Native/Bilingual</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Resume Upload</legend>
+                <label for="resume">Attach Resume (PDF or DOCX)</label>
+                <input type="file" id="resume" name="resume" accept=".pdf, .docx">
+            </fieldset>
+
+            <input type="submit" value="Save and Publish Profile">
+
+        </form>
+    </div>
+
+    <div id="successMessage" style="display: none;">
+        <div style="text-align: center; padding: 40px; border: 2px solid #28a745; border-radius: 8px; background-color: #f8fff9;">
+            <h2 style="color: #28a745;">🎉 Profile Submitted Successfully!</h2>
+            <p>Your professional profile has been saved. Employers can now view your qualifications.</p>
+            <button onclick="window.location.reload()" style="padding: 10px 20px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
+                Create Another Profile
+            </button>
+        </div>
+    </div>
+
+    <script>
+    const form = document.getElementById('profileForm');
+    
+    form.addEventListener('submit', function(e) {
+        // Prevent default submission to handle custom validation and demo UI changes
+        e.preventDefault();
+
+        // UAT 4: Ensure start date is earlier than or equal to end date
+        const startDateVal = document.getElementById('startDate').value;
+        const endDateVal = document.getElementById('endDate').value;
+        const dateErrorDiv = document.getElementById('dateError');
+        
+        if (startDateVal && endDateVal) {
+            const startDate = new Date(startDateVal);
+            const endDate = new Date(endDateVal);
+            
+            if (startDate > endDate) {
+                dateErrorDiv.style.display = 'block';
+                // Scroll to the error
+                document.getElementById('startDate').focus();
+                return; // Stop the submission
+            } else {
+                dateErrorDiv.style.display = 'none';
+            }
+        }
+
+        // If all validations pass (HTML5 handled the rest of UAT 8)
+        
+        // Hide the form container
+        document.getElementById('formContainer').style.display = 'none';
+
+        // UAT 9: Display confirmation message
+        document.getElementById('successMessage').style.display = 'block';
+    });
+    </script>
+
+</body>
+</html>
