@@ -124,5 +124,30 @@
         </form>
     </div>
 
+    <div id="successMessage" style="display: none;">
+        <div style="text-align: center; padding: 40px; border: 2px solid #28a745; border-radius: 8px; background-color: #f8fff9;">
+            <h2 style="color: #28a745;">🎉 Profile Submitted Successfully!</h2>
+            <p>Your professional profile has been saved. Employers can now view your qualifications.</p>
+            <button onclick="window.location.reload()" style="padding: 10px 20px; background: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 15px;">
+                Create Another Profile
+            </button>
+        </div>
+    </div>
+
+    <script>
+    const form = document.getElementById('profileForm');
+    
+    form.addEventListener('submit', function(e) {
+        // Prevent default submission
+        e.preventDefault();
+        
+        // Hide the form container
+        document.getElementById('formContainer').style.display = 'none';
+
+        // Display confirmation message
+        document.getElementById('successMessage').style.display = 'block';
+    });
+    </script>
+
 </body>
 </html>
