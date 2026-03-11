@@ -105,8 +105,8 @@
       });
     }
 
-    // ✅ Show all active jobs initially (matches acceptance criteria #5 behavior when empty)
-    const activeJobs = JOBS.filter(j => j.status.toLowerCase() === "active");
+    // ✅ Show all active jobs initially (matches acceptance criteria #5 behavior when empty) // SAT #4: Ensure "Deleted" jobs are filtered out immediately
+    const activeJobs = JOBS.filter(j => j.status.toLowerCase() === "active" && j.status !== "Deleted");
     renderJobs(activeJobs);
 
     // Optional: validate "alphanumeric keywords" (letters/numbers/spaces allowed)

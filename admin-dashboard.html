@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - Job Moderation Dashboard</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; padding: 40px; }
+        .admin-card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); max-width: 1000px; margin: auto; }
+        h2 { color: #dc3545; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; }
+        .btn-delete { background: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-delete:hover { background: #c82333; }
+        .status-msg { display: none; padding: 15px; margin-bottom: 20px; border-radius: 4px; background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+
+<div class="admin-card">
+    <div id="statusMsg" class="status-msg"></div>
+    <h2>Job Post Moderation Console</h2>
+    <p>Logged in as: <b>Administrator</b></p>
+
+    <table id="jobTable">
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Location</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="adminJobList"></tbody>
+    </table>
+</div>
+
+<script>
+    // SAT #9: Access Control
+    if (localStorage.getItem("currentUserRole") !== "ADMIN") {
+        window.location.href = "UserLogin.html";
+    }
+
+    // Load jobs from localStorage or use defaults if empty
+    let JOBS = JSON.parse(localStorage.getItem('JOBS')) || [
+      { id: 1, title: "Software Developer", company: "TechNova", status: "Active", location: "Kuala Lumpur" },
+      { id: 2, title: "Marketing Executive", company: "BrightAds", status: "Active", location: "Selangor" },
+      { id: 3, title: "WIN FREE MONEY FAST!!!", company: "ScamCorp", status: "Active", location: "Penang" }
+    ];
+
+    function renderAdminTable() {
+        const tableBody = document.getElementById("adminJobList");
+        tableBody.innerHTML = "";
+
+        // SAT #4: Only show non-deleted jobs
+        JOBS.filter(j => j.status !== "Deleted").forEach(job => {
+            const row = `<tr>
+                <td>${job.title}</td>
+                <td>${job.company}</td>
+                <td>${job.location}</td>
+                <td><button class="btn-delete" onclick="handleDelete(${job.id}, '${job.title}')">Delete</button></td>
+            </tr>`;
+            tableBody.innerHTML += row;
+        });
+    }
+
+    function handleDelete(jobId, jobTitle) {
+        // SAT #2: Confirmation prompt
+        if (confirm(`Are you sure you want to delete the job post: "${jobTitle}"?`)) {
+            
+            // SAT #3: Require reason
+            const reason = prompt("Enter reason for deletion (e.g. Inappropriate, Spam):");
+            
+            if (reason && reason.trim() !== "") {
+                // SAT #4 & #6: Mark as Deleted and update storage
+                const jobIndex = JOBS.findIndex(j => j.id === jobId);
+                JOBS[jobIndex].status = "Deleted";
+                localStorage.setItem('JOBS', JSON.stringify(JOBS));
+
+                // SAT #6: Audit Log simulation
+                console.log(`AUDIT LOG: Job ID ${jobId} deleted. Reason: ${reason}. Time: ${new Date()}`);
+
+                // SAT #5: Notification simulation
+                console.log(`NOTIFICATION: Email sent to employer regarding deletion of "${jobTitle}" for: ${reason}`);
+
+                // SAT #8: Success message
+                const msgBox = document.getElementById("statusMsg");
+                msgBox.innerText = `Successfully deleted "${jobTitle}". Employer has been notified.`;
+                msgBox.style.display = "block";
+                
+                renderAdminTable();
+            } else {
+                alert("Deletion canceled. A reason is required.");
+            }
+        }
+    }
+
+    renderAdminTable();
+</script>
+</body>
+</html>
