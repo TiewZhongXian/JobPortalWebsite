@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin - User Management</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f4f6f9; }
+        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background: #f0f0f0; }
+        .ban-btn { background: #dc3545; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+        .ban-btn:hover { background: #c82333; }
+        .status-banned { color: #dc3545; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>User Management Dashboard</h2>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>User ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="user-101">
+                    <td>101</td>
+                    <td>User</td>
+                    <td>user@email.com</td>
+                    <td class="status">Active</td>
+                    <td><button class="ban-btn" onclick="banUser('101', 'User')">Ban User</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function banUser(userId, userName) {
+            // SAT: Require a reason for the ban
+            const reason = prompt(`Enter reason for banning ${userName}:`);
+            
+            if (reason) {
+                const confirmed = confirm(`Are you sure you want to ban ${userName}? This will terminate their session.`);
+                
+                if (confirmed) {
+                    // Update the UI (Simulating database update)
+                    const row = document.getElementById(`user-${userId}`);
+                    row.querySelector('.status').innerText = "Banned";
+                    row.querySelector('.status').className = "status-banned";
+                    row.querySelector('.ban-btn').disabled = true;
+                    row.querySelector('.ban-btn').innerText = "Banned";
+
+                    // SAT: Record the Audit Log
+                    console.log(`AUDIT LOG: User ${userId} banned by Admin at ${new Date().toLocaleString()}. Reason: ${reason}`);
+                    
+                    alert(`${userName} has been banned and their sessions terminated.`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
