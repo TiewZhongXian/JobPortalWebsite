@@ -23,7 +23,27 @@
 
         h2 {
             text-align: center;
-            margin-bottom: 25px;
+            margin: 0;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .top-bar button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .top-bar button:hover {
+            background-color: #0056b3;
         }
 
         .job-card {
@@ -73,34 +93,35 @@
             color: #721c24;
         }
 
-        .empty-message {
+        #tableView {
             display: none;
-            text-align: center;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border: 1px dashed #ccc;
+            margin-top: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
             border-radius: 8px;
-            color: #666;
         }
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        table th, table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
 
-        .top-bar button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 6px;
+        table th {
             background-color: #007bff;
             color: white;
-            cursor: pointer;
         }
 
-        .top-bar button:hover {
-            background-color: #0056b3;
+        table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
@@ -112,6 +133,7 @@
         <button onclick="toggleJobs()">Toggle View</button>
     </div>
 
+    <!-- Card View -->
     <div id="jobList">
         <div class="job-card">
             <h3>Software Developer</h3>
@@ -138,22 +160,56 @@
         </div>
     </div>
 
-    <div class="empty-message" id="emptyMessage">
-        No applied jobs found.
+    <!-- Table View -->
+    <div id="tableView">
+        <table>
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Company</th>
+                    <th>Location</th>
+                    <th>Date Applied</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Software Developer</td>
+                    <td>Tech Solutions Sdn Bhd</td>
+                    <td>Kuala Lumpur</td>
+                    <td>10 March 2026</td>
+                    <td><span class="status pending">Pending</span></td>
+                </tr>
+                <tr>
+                    <td>Frontend Developer</td>
+                    <td>Web Innovate Sdn Bhd</td>
+                    <td>Selangor</td>
+                    <td>8 March 2026</td>
+                    <td><span class="status reviewed">Reviewed</span></td>
+                </tr>
+                <tr>
+                    <td>UI/UX Designer</td>
+                    <td>Creative Labs</td>
+                    <td>Penang</td>
+                    <td>5 March 2026</td>
+                    <td><span class="status interviewing">Interviewing</span></td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 
 <script>
     function toggleJobs() {
-        const jobList = document.getElementById("jobList");
-        const emptyMessage = document.getElementById("emptyMessage");
+        const cardView = document.getElementById("jobList");
+        const tableView = document.getElementById("tableView");
 
-        if (jobList.style.display === "none") {
-            jobList.style.display = "block";
-            emptyMessage.style.display = "none";
+        if (cardView.style.display === "none") {
+            cardView.style.display = "block";
+            tableView.style.display = "none";
         } else {
-            jobList.style.display = "none";
-            emptyMessage.style.display = "block";
+            cardView.style.display = "none";
+            tableView.style.display = "block";
         }
     }
 </script>
