@@ -1,3 +1,27 @@
+<?php
+$error_msg = "";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $name = trim($_POST["name"]);
+    $email = trim($_POST["email"]);
+    $phone = trim($_POST["phone"]);
+    $password = $_POST["password"];
+    $confirm_password = $_POST["confirm_password"];
+
+    if (empty($name) || empty($email) || empty($phone) || empty($password) || empty($confirm_password)) {
+        $error_msg = "Registration failed: All fields are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error_msg = "Registration failed: Invalid email format.";
+    } elseif (!preg_match('/^[0-9]{10,11}$/', $phone)) {
+        $error_msg = "Registration failed: Phone number must contain only numbers (10-11 digits).";
+    } elseif ($password !== $confirm_password) {
+        $error_msg = "Registration failed: Passwords do not match.";
+    } else {
+        $error_msg = "Validation passed! (Database connection coming soon)";
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,12 +36,17 @@
         input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
         button { width: 100%; padding: 10px; background-color: #0056b3; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #004494; }
+        .error { color: #d9534f; background-color: #fdf7f7; padding: 10px; border: 1px solid #d9534f; border-radius: 4px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <h2>Job Seeker Registration</h2>
+
+    <?php if (!empty($error_msg)): ?>
+        <div class="error"><?php echo htmlspecialchars($error_msg); ?></div>
+    <?php endif; ?>
 
     <form method="POST" action="">
         <div class="form-group">
