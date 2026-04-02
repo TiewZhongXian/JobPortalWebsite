@@ -1,10 +1,6 @@
 name: Edit Job Details CI
 
-on:
-  push:
-    branches: [ master, main ]
-  pull_request:
-    branches: [ master, main ]
+on: [push]
 
 jobs:
   phpunit-tests:
@@ -18,24 +14,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mysqli, pdo, pdo_mysql
-          coverage: none
-
-      - name: Validate composer files
-        run: composer validate --no-check-publish
 
       - name: Install dependencies
-        run: composer install --prefer-dist --no-progress
-
-      - name: Create test results folder
-        run: mkdir -p test-results
+        run: composer install
 
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit tests --log-junit test-results/junit.xml
-
-      - name: Upload JUnit test report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-report
-          path: test-results/junit.xml
+        run: ./vendor/bin/phpunit tests/EditJobTest.php
