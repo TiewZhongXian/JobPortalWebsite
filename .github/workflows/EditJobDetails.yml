@@ -21,4 +21,4 @@ jobs:
           chmod +x phpunit-9.phar
 
       - name: Run PHPUnit tests
-        run: php phpunit-9.phar tests
+        run: php phpunit-9.phar Ritan/tests
