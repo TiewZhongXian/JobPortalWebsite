@@ -15,8 +15,10 @@ jobs:
         with:
           php-version: '8.2'
 
-      - name: Install dependencies
-        run: composer install
+      - name: Download PHPUnit
+        run: |
+          wget https://phar.phpunit.de/phpunit-9.phar
+          chmod +x phpunit-9.phar
 
       - name: Run PHPUnit tests
-        run: ./vendor/bin/phpunit tests/EditJobTest.php
+        run: php phpunit-9.phar tests
