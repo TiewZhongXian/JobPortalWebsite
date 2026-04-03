@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +28,7 @@
             background-color: var(--card-bg);
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             width: 100%;
             max-width: 400px;
             box-sizing: border-box;
@@ -113,11 +114,12 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="login-card">
         <h2>Job Portal Website Group 1</h2>
-        
+
         <div id="errorMessage" class="error-message"></div>
         <div id="successMessage" class="success-message">Redirecting to Dashboard...</div>
 
@@ -126,7 +128,7 @@
                 <label for="email">Email Address</label>
                 <input type="text" id="email" placeholder="Enter your email">
             </div>
-            
+
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" placeholder="Enter your password">
@@ -141,6 +143,9 @@
         const VALID_EMAIL = "user@email.com"; // Stored in lowercase for case-insensitive check
         const VALID_PASSWORD = "Password123"; // Case-sensitive
 
+        // Admin credentials
+        const ADMIN_EMAIL = "admin@jobportal.com";
+        const ADMIN_PASSWORD = "AdminPassword123";
         // NEW: Simulated Banned User (SAT: Prevent banned user login)
         const BANNED_USER_EMAIL = "user@email.com";
 
@@ -167,7 +172,7 @@
             passwordInput.classList.remove('error-highlight');
         }
 
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
             clearErrors();
 
@@ -185,6 +190,9 @@
                 showError("This account has been banned for violating community guidelines.");
                 return;
             }
+
+            const isUser = emailVal.toLowerCase() === VALID_EMAIL && passwordVal === VALID_PASSWORD;
+            const isAdmin = emailVal.toLowerCase() === ADMIN_EMAIL && passwordVal === ADMIN_PASSWORD;
 
             let hasEmptyFields = false;
 
@@ -207,16 +215,38 @@
             const isEmailCorrect = emailVal.toLowerCase() === VALID_EMAIL;
             const isPasswordCorrect = passwordVal === VALID_PASSWORD;
 
-            if (isEmailCorrect && isPasswordCorrect) {
-                // Success (SAT: Authenticate and redirect)
+            // NEW ADMIN CHECK
+            const isAdminEmail = emailVal.toLowerCase() === ADMIN_EMAIL;
+            const isAdminPassword = passwordVal === ADMIN_PASSWORD;
+
+            if (isAdminEmail && isAdminPassword) {
+                // ADMIN LOGIN: Acceptance Test #1, #9
+                localStorage.setItem("currentUserRole", "ADMIN");
                 loginForm.style.display = 'none';
                 errorMessage.style.display = 'none';
+                successMessage.textContent = "Redirecting to Admin Dashboard...";
                 successMessage.style.display = 'block';
-                failedAttempts = 0; // Reset attempts on success
+
+                setTimeout(() => {
+                    window.location.href = "admin-dashboard.html";
+                }, 1000);
+
+            } else if (isEmailCorrect && isPasswordCorrect) {
+                // NORMAL USER LOGIN: Keep your original logic
+                localStorage.setItem("currentUserRole", "USER");
+                loginForm.style.display = 'none';
+                errorMessage.style.display = 'none';
+                successMessage.textContent = "Redirecting to Job Search...";
+                successMessage.style.display = 'block';
+                failedAttempts = 0;
+
+                setTimeout(() => {
+                    window.location.href = "job-search.html";
+                }, 1000);
             } else {
                 // Failure (SAT: Generic error message)
                 failedAttempts++;
-                
+
                 if (failedAttempts >= MAX_ATTEMPTS) {
                     showError("Account temporarily locked due to too many failed attempts. Please try again later.");
                     emailInput.disabled = true;
@@ -229,4 +259,5 @@
         });
     </script>
 </body>
+
 </html>
