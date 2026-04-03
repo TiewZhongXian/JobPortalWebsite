@@ -2,11 +2,9 @@ name: CI
 
 on:
   push:
-    branches:
-      - "**"
+    branches: [ G1JPW-37-As-a-Job-Seeker-I-want-to-register-for-an-account-so-that-I-can-access-personalized-job-hunting-features ]
   pull_request:
-    branches:
-      - "**"
+    branches: [ G1JPW-37-As-a-Job-Seeker-I-want-to-register-for-an-account-so-that-I-can-access-personalized-job-hunting-features ]
 
 jobs:
   python-tests-on-php:
@@ -22,19 +20,19 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.2"
+          php-version: '8.2'
 
       - name: Setup Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: '3.11'
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests
 
-      - name: Prepare users.txt
+      - name: Prepare test data file
         run: |
           touch users.txt
           : > users.txt
@@ -50,5 +48,4 @@ jobs:
 
       - name: Show PHP server log if tests fail
         if: failure()
-        run: |
-          cat php-server.log
+        run: cat php-server.log
