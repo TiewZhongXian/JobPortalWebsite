@@ -8,12 +8,13 @@ from urllib.parse import urljoin
 
 class RegisterTests(unittest.TestCase):
     BASE_URL = os.getenv("REGISTER_URL", "http://127.0.0.1:8000/register.php")
+    USERS_FILE = "users.txt"
 
     def setUp(self):
         self.session = requests.Session()
 
-        # Clear users.txt before every test so tests do not affect each other
-        with open("users.txt", "w", encoding="utf-8") as f:
+        # Reset users.txt before every test
+        with open(self.USERS_FILE, "w", encoding="utf-8") as f:
             f.write("")
 
         rand = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
@@ -27,6 +28,14 @@ class RegisterTests(unittest.TestCase):
 
     def tearDown(self):
         self.session.close()
+
+    def seed_user_record(self, name, email, phone, password_hash="dummy_hashed_password"):
+        """
+        Write a user directly into users.txt so duplicate checks can be tested
+        against existing stored data.
+        """
+        with open(self.USERS_FILE, "a", encoding="utf-8") as f:
+            f.write(f"{name}|{email}|{phone}|{password_hash}\n")
 
     def submit_and_follow(self, data):
         response = self.session.post(
@@ -121,62 +130,44 @@ class RegisterTests(unittest.TestCase):
         )
 
     def test_duplicate_email_rejected(self):
-        first_user = {
-            "name": "Test User",
-            "email": "first_email_test@example.com",
-            "phone": "0181111111",
-            "password": "Password123",
-            "confirm_password": "Password123"
-        }
-
-        first_html = self.submit_and_follow(first_user)
-        self.assertContainsMessage(
-            first_html,
-            "Account successfully created! Welcome to the Job Portal, Test User."
+        self.seed_user_record(
+            name="Existing User",
+            email="existing_email@example.com",
+            phone="0181111111"
         )
 
-        second_user = {
-            "name": "Test User 2",
-            "email": "first_email_test@example.com",
+        data = {
+            "name": "Test User",
+            "email": "existing_email@example.com",
             "phone": "0182222222",
             "password": "Password123",
             "confirm_password": "Password123"
         }
 
-        second_html = self.submit_and_follow(second_user)
+        html = self.submit_and_follow(data)
         self.assertContainsMessage(
-            second_html,
+            html,
             "Registration failed: This email is already registered."
         )
 
     def test_duplicate_phone_rejected(self):
-        shared_phone = "0198765432"
-
-        first_user = {
-            "name": "Test User",
-            "email": "first_phone_test@example.com",
-            "phone": shared_phone,
-            "password": "Password123",
-            "confirm_password": "Password123"
-        }
-
-        first_html = self.submit_and_follow(first_user)
-        self.assertContainsMessage(
-            first_html,
-            "Account successfully created! Welcome to the Job Portal, Test User."
+        self.seed_user_record(
+            name="Existing User",
+            email="existing_phone@example.com",
+            phone="0198765432"
         )
 
-        second_user = {
+        data = {
             "name": "Test User 2",
-            "email": "second_phone_test@example.com",
-            "phone": shared_phone,
+            "email": "new_user@example.com",
+            "phone": "0198765432",
             "password": "Password123",
             "confirm_password": "Password123"
         }
 
-        second_html = self.submit_and_follow(second_user)
+        html = self.submit_and_follow(data)
         self.assertContainsMessage(
-            second_html,
+            html,
             "Registration failed: This phone number is already registered."
         )
 
