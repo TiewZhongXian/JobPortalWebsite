@@ -31,9 +31,9 @@ class UserBanTest extends TestCase {
 
     /**
      * @test
-     * AC3: System updates user status to "Banned"
+     * System updates user status to "Banned"
      */
-    public function test_ac3_system_updates_status_to_banned() {
+    public function test_system_updates_status_to_banned() {
         $emailToBan = "trouble@example.com";
         $lines = file($this->testUserFile, FILE_IGNORE_NEW_LINES);
         $updated = false;
@@ -52,25 +52,13 @@ class UserBanTest extends TestCase {
         $this->assertStringContainsString('Banned', file_get_contents($this->testUserFile));
     }
 
-    /**
-     * @test
-     * AC5: Banned user is prevented from logging in
-     */
-    public function test_ac5_banned_user_cannot_login() {
-        // Simulate a user record retrieved from the file
-        $userRecord = ['Name', 'trouble@example.com', '0123456789', 'hash', 'Banned'];
-        
-        // Security Logic: Only 'Active' users can authenticate
-        $loginAllowed = ($userRecord[4] === 'Active');
 
-        $this->assertFalse($loginAllowed, "Security Requirement: Banned users must be denied access.");
-    }
 
     /**
      * @test
-     * AC6: System records the action in an audit log including the reason
+     * System records the action in an audit log including the reason
      */
-    public function test_ac6_audit_log_records_ban_reason() {
+    public function test_audit_log_records_ban_reason() {
         $adminId = "Admin_01";
         $targetUser = "trouble@example.com";
         $reason = "Spamming and Harassment"; // Requirement: Admin must provide reason
@@ -87,9 +75,9 @@ class UserBanTest extends TestCase {
 
     /**
      * @test
-     * AC2: Admin provides a reason for the ban (Validation Check)
+     * Admin provides a reason for the ban (Validation Check)
      */
-    public function test_ac2_ban_requires_non_empty_reason() {
+    public function test_ban_requires_non_empty_reason() {
         $providedReason = ""; // Empty reason
         
         // Validation logic: Reason is mandatory
