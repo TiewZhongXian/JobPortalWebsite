@@ -1,0 +1,29 @@
+name: Applied Jobs Unit Test CI
+
+on:
+  push:
+    branches:
+      - main
+      - G1JPW-38-As-a-Job-Seeker-I-want-to-view-a-list-of-jobs-I-have-applied-for-so-that-I-can-keep-track-of-my-job-hunt
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  python-unit-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Show project files
+        run: ls -R
+
+      - name: Run Python unit tests
+        run: python -m unittest discover -s tests -p "test_*.py" -v
