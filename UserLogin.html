@@ -146,6 +146,8 @@
         // Admin credentials
         const ADMIN_EMAIL = "admin@jobportal.com";
         const ADMIN_PASSWORD = "AdminPassword123";
+        // NEW: Simulated Banned User (SAT: Prevent banned user login)
+        const BANNED_USER_EMAIL = "user@email.com";
 
         // State variables
         let failedAttempts = 0;
@@ -174,14 +176,20 @@
             e.preventDefault();
             clearErrors();
 
+            const emailVal = emailInput.value.trim();
+            const passwordVal = passwordInput.value;
+
             // Check if account is locked out (SAT: 5 failed attempts)
             if (failedAttempts >= MAX_ATTEMPTS) {
                 showError("Account temporarily locked due to too many failed attempts. Please try again later.");
                 return;
             }
 
-            const emailVal = emailInput.value.trim();
-            const passwordVal = passwordInput.value;
+            // NEW: Check for Banned Status (SAT: The system shall prevent login for Banned users)
+            if (emailVal.toLowerCase() === BANNED_USER_EMAIL) {
+                showError("This account has been banned for violating community guidelines.");
+                return;
+            }
 
             const isUser = emailVal.toLowerCase() === VALID_EMAIL && passwordVal === VALID_PASSWORD;
             const isAdmin = emailVal.toLowerCase() === ADMIN_EMAIL && passwordVal === ADMIN_PASSWORD;
