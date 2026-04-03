@@ -7,21 +7,19 @@ from urllib.parse import urljoin
 
 
 class RegisterTests(unittest.TestCase):
+    # Local default for GitHub Actions or PHP built-in server.
+    # You can override this in CI with:
+    # REGISTER_URL=http://127.0.0.1:8000/register.php
     BASE_URL = os.getenv("REGISTER_URL", "http://127.0.0.1:8000/register.php")
-    USERS_FILE = "users.txt"
 
     def setUp(self):
         self.session = requests.Session()
-
-        # Reset users.txt before every test
-        with open(self.USERS_FILE, "w", encoding="utf-8") as f:
-            f.write("")
 
         rand = ''.join(random.choices(string.ascii_lowercase + string.digits, k=6))
         self.valid_data = {
             "name": "Test User",
             "email": f"user_{rand}@example.com",
-            "phone": "01" + ''.join(random.choices(string.digits, k=8)),
+            "phone": "01" + ''.join(random.choices(string.digits, k=8)),  # 10 digits total
             "password": "Password123",
             "confirm_password": "Password123"
         }
@@ -29,15 +27,11 @@ class RegisterTests(unittest.TestCase):
     def tearDown(self):
         self.session.close()
 
-    def seed_user_record(self, name, email, phone, password_hash="dummy_hashed_password"):
-        """
-        Write a user directly into users.txt so duplicate checks can be tested
-        against existing stored data.
-        """
-        with open(self.USERS_FILE, "a", encoding="utf-8") as f:
-            f.write(f"{name}|{email}|{phone}|{password_hash}\n")
-
     def submit_and_follow(self, data):
+        """
+        Submit the registration form and manually follow the redirect.
+        This matches the PHP Post-Redirect-Get flow.
+        """
         response = self.session.post(
             self.BASE_URL,
             data=data,
@@ -104,7 +98,7 @@ class RegisterTests(unittest.TestCase):
 
     def test_phone_too_short_rejected(self):
         data = self.valid_data.copy()
-        data["phone"] = "012345678"
+        data["phone"] = "012345678"  # 9 digits
         html = self.submit_and_follow(data)
         self.assertContainsMessage(
             html,
@@ -113,7 +107,7 @@ class RegisterTests(unittest.TestCase):
 
     def test_phone_too_long_rejected(self):
         data = self.valid_data.copy()
-        data["phone"] = "012345678901"
+        data["phone"] = "012345678901"  # 12 digits
         html = self.submit_and_follow(data)
         self.assertContainsMessage(
             html,
@@ -130,42 +124,31 @@ class RegisterTests(unittest.TestCase):
         )
 
     def test_duplicate_email_rejected(self):
-        self.seed_user_record(
-            name="Existing User",
-            email="existing_email@example.com",
-            phone="0181111111"
-        )
+        first_user = self.valid_data.copy()
+        self.submit_and_follow(first_user)
 
-        data = {
-            "name": "Test User",
-            "email": "existing_email@example.com",
-            "phone": "0182222222",
-            "password": "Password123",
-            "confirm_password": "Password123"
-        }
+        second_user = self.valid_data.copy()
+        second_user["phone"] = "01" + ''.join(random.choices(string.digits, k=8))
+        html = self.submit_and_follow(second_user)
 
-        html = self.submit_and_follow(data)
         self.assertContainsMessage(
             html,
             "Registration failed: This email is already registered."
         )
 
     def test_duplicate_phone_rejected(self):
-        self.seed_user_record(
-            name="Existing User",
-            email="existing_phone@example.com",
-            phone="0198765432"
-        )
+        shared_phone = "01" + ''.join(random.choices(string.digits, k=8))
 
-        data = {
-            "name": "Test User 2",
-            "email": "new_user@example.com",
-            "phone": "0198765432",
-            "password": "Password123",
-            "confirm_password": "Password123"
-        }
+        first_user = self.valid_data.copy()
+        first_user["email"] = f"first_{''.join(random.choices(string.ascii_lowercase, k=5))}@example.com"
+        first_user["phone"] = shared_phone
+        self.submit_and_follow(first_user)
 
-        html = self.submit_and_follow(data)
+        second_user = self.valid_data.copy()
+        second_user["email"] = f"second_{''.join(random.choices(string.ascii_lowercase, k=5))}@example.com"
+        second_user["phone"] = shared_phone
+        html = self.submit_and_follow(second_user)
+
         self.assertContainsMessage(
             html,
             "Registration failed: This phone number is already registered."
